@@ -60,57 +60,11 @@ void WiFiReset() {
   WiFi.mode(WIFI_OFF);
 }
 
-
-//兩個電池盒(的那一邊)在右
-//move1,2(HIGH,LOW,HIGH,LOW)前進
-//move_1(LOW,HIGH,LOW,HIGH)後退
-//move1(HIGH,LOW,HIGH,LOW)前方馬達
-//move22(HIGH,LOW,HIGH,LOW)前方馬達
-//move1,2(HIGH(左),LOW(左),HIGH(右),LOW)(右))前方馬達
-void move_1(int a,int b, int c, int d){
-  digitalWrite(M1,a);
-  digitalWrite(M2,b);
-  digitalWrite(M3,c);
-  digitalWrite(M4,d);
-}
-void move_2(int a,int b, int c, int d){
-  digitalWrite(I1,a);
-  digitalWrite(I2,b);
-  digitalWrite(I3,c);
-  digitalWrite(I4,d);
-}
-
-void m_front(){
-  move_1(HIGH,LOW,HIGH,LOW);
-  move_2(HIGH,LOW,HIGH,LOW);
-}
-
-void m_back(){
-  move_1(LOW,HIGH,LOW,HIGH);
-  move_2(LOW,HIGH,LOW,HIGH);
-}
-
-void m_stop(){
-  move_1(LOW,LOW,LOW,LOW);
-  move_2(LOW,LOW,LOW,LOW);
-}
-
 void setup()
 {
     Serial.begin(115200);
     WiFiReset();
     esp_wifi_set_channel(6,WIFI_SECOND_CHAN_NONE);
-    pinMode(I1,OUTPUT);
-    pinMode(I2,OUTPUT);
-    pinMode(I3,OUTPUT);
-    pinMode(I4,OUTPUT);
-    pinMode(M1,OUTPUT);
-    pinMode(M2,OUTPUT);
-    pinMode(M3,OUTPUT);
-    pinMode(M4,OUTPUT);
-    
-    move_1(LOW,LOW,LOW,LOW);
-    move_2(LOW,LOW,LOW,LOW);
 
     // 初始化 ESP-NOW
     WiFi.mode(WIFI_STA);
@@ -139,8 +93,6 @@ void setup()
    
     server.begin();
 }
-
-
 
 int value = 0;
 int class_tmp[100];//(暫時)紀錄選擇班級
@@ -296,8 +248,7 @@ void loop(){
               client.println(class_tmp_show);
               client.println("</div></div><div id=btn_all><div id=rec><a href=/deli_2/rec><button class=button_b>登記教室</button></a></div><div id=clear><a href=/deli_2/clear><button class=button_b>清空選擇</button></a></div><div id=go_home><a href=/ ><button class=button_b>返回主頁</button></a></div></div></div></div></body></html>");
               //
-              client.println();
-                
+              client.println(); 
 
               }else if(mode == 3){// /deli_2/rec 中正樓登記
 
@@ -385,7 +336,7 @@ void loop(){
                 Serial.println("Client disconnected.");
                 Serial.println("");
 
-                /*To Do 以下放置發送資料代碼
+                /*To Do 以下為發送資料給自走車代碼
 
                   WiFi.disconnect();
 
@@ -419,7 +370,6 @@ void loop(){
                 
                 break;
               }
-
             }
             client.println();
             break;
