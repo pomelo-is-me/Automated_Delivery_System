@@ -362,7 +362,7 @@ void loop(){
                 client.println("#btn_all{position:absolute;top:530px;left:0;right:0;margin:auto;width:750px;height:120px}#start{position:absolute;top:0;left:150px}#go_back{position:absolute;top:0;left:450px}#class_rec_title{text-align:center;font-size:37px;border:none}");
                 client.println("#class_rec_box{text-align:left;width:720px;height:380px;margin:0 auto}.floor_rec_box{text-align:left;font-size:35px;margin:15px}.floor_rec_show{background-color:#77c7fc;text-align:center;width:80px;height:50px;font-size:30px;margin:1px;color:#fff;border:none;border-radius:10px;display:inline-block}");
                 client.println(".button_b{display:flex;align-items:center;justify-content:center;position:absolute;width:150px;height:80px;background-color:#77c7fc;color:#fff;font-size:30px;border:none;border-radius:10px;cursor:pointer;font-family:'Noto Sans TC',sans-serif}</style></head>");
-                client.println("<body><div id=sitebody><div id=header>請選擇班級</div><div id=content><div id=sel_a><div id=class_rec_title>已登記教室</div><div id=class_rec_box><div class=floor_rec_box>2F：<br>");
+                client.println("<body><div id=sitebody><div id=header>已登記班級</div><div id=content><div id=sel_a><div id=class_rec_title>目前登記</div><div id=class_rec_box><div class=floor_rec_box>2F：<br>");
                 client.println(class_rec_show_f[2]);
                 client.println("</div><div class=floor_rec_box>3F：<br>");
                 client.println(class_rec_show_f[3]);
@@ -385,7 +385,7 @@ void loop(){
                 Serial.println("Client disconnected.");
                 Serial.println("");
 
-                /*To Do 以下放置運送代碼
+                /*To Do 以下放置發送資料代碼
 
                   WiFi.disconnect();
 
