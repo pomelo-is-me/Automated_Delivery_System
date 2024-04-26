@@ -210,21 +210,24 @@ void loop(){
                 class_tmp_show="";
                 class_tmp_pos=-1;   
               }else if(header.indexOf("GET /deli_2/f") >= 0){//將選擇記錄
+
                 F+="<div id=\"floor_show\">" + String(f_num) + "F" + "</div>";
+
                 for(int i=0;i<class_num[f_num];i++){
                   F_class+="<option value=\"/deli_2/f" + String(f_num) + "/" + String(class_order_f[f_num][i]) + "\">" + String(class_order_f[f_num][i]) + "</option>";
+                  
                   if(header.indexOf( String(class_order_f[f_num][i]) ) >= 0){
                     class_tmp_pos++;  
                     class_tmp[class_tmp_pos] = class_order_f[f_num][i]; 
                   }
                 }
+
               }
               class_tmp_show="";
               for(int i=0;i<=class_tmp_pos;i++){//紀錄字串，顯示在畫面上
                 class_tmp_show += "<div id=\"class_show\">";
                 class_tmp_show += String(class_tmp[i]);
                 class_tmp_show += "</div>";
-
               }
 
               // deli_2
