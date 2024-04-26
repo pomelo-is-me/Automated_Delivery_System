@@ -25,7 +25,7 @@
 #### 1. formatter：
 可以先將原本在 VScode 中編輯的網站代碼透過網路上的 HTML Minifier 壓縮並整理後，丟進formatter進行排版，以符合語法。
 #### 2. web_code_html：
-存放原本在 VScode 中編輯的網站代碼，並無處理資料、運算等功能，需進行整理上傳至 ESP32 (整理後的程式碼放在web_to_car_ESP32 中)
+存放原本在 VScode 中編輯的網站代碼，並無處理資料、運算等功能(無法選擇班級及記錄，顯示的班級僅為示例)，需進行整理上傳至 ESP32 (整理後的程式碼放在 web_to_car_ESP32 中)
 ##### 2.1 home.html
 主頁
 ##### 2.2 sel_b.html
