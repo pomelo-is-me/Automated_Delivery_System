@@ -201,7 +201,7 @@ void loop(){
               m_stop();
               WiFi.disconnect();        
 
-              // 發送資料給電梯按鈕裝置
+// 發送資料給電梯按鈕裝置
               uint8_t primaryChan = 6;
               wifi_second_chan_t secondChan = WIFI_SECOND_CHAN_NONE;
               esp_wifi_set_channel(primaryChan, secondChan);
@@ -212,7 +212,7 @@ void loop(){
               peerInfo.channel = 6;
               peerInfo.encrypt = false;
 
-// 檢查裝置是否配對成功
+              // 檢查裝置是否配對成功
               if (esp_now_add_peer(&peerInfo) != ESP_OK) {
                 Serial.println("Failed to add peer");
                 return;
@@ -299,9 +299,4 @@ void loop(){
     Serial.println("");
    
   } 
-
 }
-
-  
-
-

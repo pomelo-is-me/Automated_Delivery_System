@@ -50,4 +50,3 @@ void setup() {
 void loop(){
   esp_now_register_recv_cb(OnDataRecv); //設置資料接收回調函式
 }
-
