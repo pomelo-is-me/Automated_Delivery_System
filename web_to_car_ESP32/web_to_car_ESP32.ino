@@ -6,8 +6,9 @@
 #define turn_2 550
 #define move_f1 1500
 
-const char* ssid     = "Justin";
-const char* password = "pomelo is me";
+// 這裡放置網路名稱及密碼
+const char* ssid = "";
+const char* password = "";
 
 int I1 = 17;
 int I2 = 5;
@@ -24,8 +25,8 @@ int gogo[11];
 char m2_tmp[11];
 
 
-uint8_t broadcastAddress[] = {0xCC,0xDB,0xA7,0x47,0x09,0x9C};  //接收端的MAC
-typedef struct struct_message {//發送資料的結構
+uint8_t broadcastAddress[] = {0xCC,0xDB,0xA7,0x47,0x09,0x9C}; // 接收端的MAC
+typedef struct struct_message { // 發送資料的結構
   int data;
 } struct_message;
 struct_message myData;
@@ -95,17 +96,17 @@ void setup()
 }
 
 int value = 0;
-int class_tmp[100];//(暫時)紀錄選擇班級
-int class_rec[100];//(已登記)紀錄選擇班級
-int class_rec_f[5][100];//紀錄登記班級(待運送)
+int class_tmp[100]; // (暫時)紀錄選擇班級
+int class_rec[100]; // (已登記)紀錄選擇班級
+int class_rec_f[5][100]; // 紀錄登記班級(待運送)
 int class_order_f[5][8] = {
                           {0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0},
                           {1565,1564,1563,1562,1584,1558,0,0},
                           {1566,1567,1568,1569,1570,1571,1572,1573},
                           {1581,1580,1579,1578,1577,1576,1575,1574}
-                        };//紀錄班級順序
-int class_num[5] = {0,0,6,8,8};//記錄每層猴班級數量
+                        }; // 紀錄班級順序
+int class_num[5] = {0,0,6,8,8}; // 記錄每層猴班級數量
 int class_tmp_pos=-1;
 int class_rec_pos=-1;
 String class_tmp_show;
@@ -136,17 +137,17 @@ void loop(){
             client.println("Connection: close");
             client.println();
 
-            if(header.indexOf("GET /sel_b") >= 0){// /sel_b 請選擇(所在樓)
+            if(header.indexOf("GET /sel_b") >= 0){ // /sel_b 請選擇(所在樓)
               mode = 1;
-            }else if(header.indexOf("GET /undone") >= 0){// /undone 功能、頁面未完成
+            }else if(header.indexOf("GET /undone") >= 0){ // /undone 功能、頁面未完成
               mode = -1;
-            }else if(header.indexOf("GET /deli_2/rec") >= 0){// /deli_2/rec 中正樓登記
+            }else if(header.indexOf("GET /deli_2/rec") >= 0){ // /deli_2/rec 中正樓登記
               mode = 3;
-            }else if(header.indexOf("GET /deli_2/start") >= 0){// /deli_2/start 開始運送
+            }else if(header.indexOf("GET /deli_2/start") >= 0){ // /deli_2/start 開始運送
               mode = 4;
-            }else if(header.indexOf("GET /deli_2") >= 0){// /deli_2 中正樓_選擇
+            }else if(header.indexOf("GET /deli_2") >= 0){ // /deli_2 中正樓_選擇
               mode = 2; 
-            }else if(header.indexOf("GET /") >= 0){// / 主頁
+            }else if(header.indexOf("GET /") >= 0){ // / 主頁
               mode = 0;
             }
             /*Debug
@@ -187,7 +188,7 @@ void loop(){
               //
               client.println();
 
-            }else if(mode == -1){// /undone 功能、頁面未完成
+            }else if(mode == -1){ // /undone 功能、頁面未完成
 
               // undone
               client.println("<!DOCTYPE html><html><head><meta charset=utf-8>");
@@ -200,16 +201,16 @@ void loop(){
               //
               client.println();
 
-            }else if(mode == 2){// /deli_2 中正樓_選擇
+            }else if(mode == 2){ // /deli_2 中正樓_選擇
 
               String F;
               String F_class="<option value=\"\">班級</option>";
               int f_num = header.substring(13,14).toInt();
 
-              if(header.indexOf("GET /deli_2/clear") >= 0){ //清空選擇
+              if(header.indexOf("GET /deli_2/clear") >= 0){ // 清空選擇
                 class_tmp_show="";
                 class_tmp_pos=-1;   
-              }else if(header.indexOf("GET /deli_2/f") >= 0){//將選擇記錄
+              }else if(header.indexOf("GET /deli_2/f") >= 0){ // 將選擇記錄
 
                 F+="<div id=\"floor_show\">" + String(f_num) + "F" + "</div>";
 
@@ -224,7 +225,7 @@ void loop(){
 
               }
               class_tmp_show="";
-              for(int i=0;i<=class_tmp_pos;i++){//紀錄字串，顯示在畫面上
+              for(int i=0;i<=class_tmp_pos;i++){ // 紀錄字串，顯示在畫面上
                 class_tmp_show += "<div id=\"class_show\">";
                 class_tmp_show += String(class_tmp[i]);
                 class_tmp_show += "</div>";
@@ -253,17 +254,17 @@ void loop(){
               //
               client.println(); 
 
-              }else if(mode == 3){// /deli_2/rec 中正樓登記
+              }else if(mode == 3){ // /deli_2/rec 中正樓登記
 
-                class_rec_pos++;//先加1
+                class_rec_pos++; // 先加1
                 for(int i=class_rec_pos;i<=class_rec_pos+class_tmp_pos;i++){
                   class_rec[i] = class_tmp[i-class_rec_pos];
                 }
-                class_rec_pos += class_tmp_pos; //當class_tmp_pos沒東西(-1)，class_rec_pos不改變。若class_tmp_pos>=0則class_rec_pos增加
+                class_rec_pos += class_tmp_pos; // 當class_tmp_pos沒東西(-1)，class_rec_pos不改變。若class_tmp_pos>=0則class_rec_pos增加
                 class_tmp_pos=-1;
                 Serial.println("class_rec: ");
 
-                for(int i=2;i<=4;i++){//進行不同樓層的班級排序(對class_rec[]內的班級照class_order_f[][]的順序進行排序，儲存到class_rec_f[][])
+                for(int i=2;i<=4;i++){ // 進行不同樓層的班級排序(對class_rec[]內的班級照class_order_f[][]的順序進行排序，儲存到class_rec_f[][])
                   for(int j=0;j<class_num[i];j++){
                     for(int k=0;k<=class_rec_pos;k++){
                       if(class_order_f[i][j] == class_rec[k]){
@@ -282,12 +283,12 @@ void loop(){
                   }
                 }
 
-                for(int i=2;i<=4;i++){//紀錄字串，顯示在畫面上
+                for(int i=2;i<=4;i++){ // 紀錄字串，顯示在畫面上
                     for(int j=0;j<=class_rec_pos_f[i];j++){
                       class_rec_show_f[i] += "<div class=\"floor_rec_show\">" + String(class_rec_f[i][j]) + "</div>";
                     }
                 }
-                /* Debug F
+                /* Debug 儲存樓層
                 Serial.println("----------------------------------");
                 Serial.println("Degug F: ");
                 Serial.print("class_rec[]: ");
@@ -326,10 +327,10 @@ void loop(){
                 //
                 client.println();
                 
-              }else if(mode == 4){// /deli_2/start 開始運送
+              }else if(mode == 4){ // /deli_2/start 開始運送
 
                 // reload
-                client.println("<!DOCTYPE html><html><head><meta charset=utf-8><meta content=\"width=device-width,initial-scale=1\"name=viewport><script>location.href=\"/undone\"</script></head></html>");//導至 undone 頁面
+                client.println("<!DOCTYPE html><html><head><meta charset=utf-8><meta content=\"width=device-width,initial-scale=1\"name=viewport><script>location.href=\"/undone\"</script></head></html>"); // 導至 undone 頁面
                 client.println();
                 delay(3000);
                 // Clear the header variable

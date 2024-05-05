@@ -5,9 +5,11 @@
 #define turn_2 550
 #define move_f1 1500
 
-const char* ssid     = "Justin";
-const char* password = "pomelo is me";
+// 這裡放置網路名稱及密碼
+const char* ssid = "";
+const char* password = "";
 
+String header;
 int I1 = 17;
 int I2 = 5;
 int I3 = 22;
@@ -17,8 +19,8 @@ int M2 = 12;
 int M3 = 14;
 int M4 = 32;
 
-uint8_t broadcastAddress[] = {0xCC,0xDB,0xA7,0x47,0x09,0x9C};  //改mac
-typedef struct struct_message { //發送資料的結構
+uint8_t broadcastAddress[] = {0x40,0x22,0xD8,0x74,0xBF,0xC4};  // 改mac
+typedef struct struct_message { // 發送資料的結構
   int data;
 } struct_message;
 struct_message myData;
@@ -91,6 +93,7 @@ void m_stop(){
   move_2(LOW,LOW,LOW,LOW);
 }
 
+
 void setup()
 {
     Serial.begin(115200);
@@ -135,6 +138,13 @@ void setup()
 }
 
 char c;
+int mode = -9;
+int ms = 0;
+int forward_sec_1 = 2000; // 一開始自走車與電梯門前距離時間
+int stop_sec_1 = 4000; // 等待電梯按鈕裝置時間
+int ele_door_ocs = 6000; // 電梯門打開時間
+int enter_ele_door = 3000; // 自走車進/出電梯時間
+
 
 void loop(){
   m_stop();
@@ -157,43 +167,52 @@ void loop(){
             client.println("HTTP/1.1 200 OK");
             client.println("Content-type:text/html");
             client.println("Connection: close");
-            client.println();
+            client.println(); 
+          
+            if (header.indexOf("GET /f/go") >= 0) { // 往前 
+              m_front();
+              delay(ms);
+              m_stop();
+            }else if (header.indexOf("GET /f") >= 0) { // 往前秒數
 
-            Serial.println("auto test mode");
-            Serial.println("");
-            client.println("<!DOCTYPE html><html>");
-            client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-            client.println("<link rel=\"icon\" href=\"data:,\">");
+              if(header.substring(7,8).toInt() == 0){
+                if(header.substring(8,9).toInt() == 1){
+                  if(ms + 500 < 100000){
+                    ms += 500;
+                  }
+                }else if(header.substring(8,9).toInt() == 2){
+                  if(ms - 500 >= 0){
+                    ms -= 500;
+                  }
+                }
+              }else{
+                ms = header.substring(7,8).toInt();
+                ms *= 1000;
+              }
 
-            client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
-            client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");
-            client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
-            client.println(".button2 {background-color: #555555;}</style></head>");
-            client.println("");
-            
-            client.println("<body><h1>delivery system</h1>");
-            
-            client.println("<p> auto test </p>");      
-            client.println("<p><a href=/con/start><button class=\"button\">start</button></a></p>"); 
-
-            client.println("</body></html>");
-            
-            if (header.indexOf("GET /con/start") >= 0) {//測試開始
+            }else if (header.indexOf("GET /auto/start") >= 0) { // 測試開始
+              // 到電梯前停下
+              Serial.println("1");    
               m_stop();
               m_front();
-              delay(3350);
+              delay(forward_sec_1);
+              // 控制電梯按鈕裝置並等待電梯打開
+              Serial.println("2");    
               m_stop();
-              
-              WiFi.disconnect();
-              //
+              WiFi.disconnect();        
+
+              // 發送資料給電梯按鈕裝置
+              uint8_t primaryChan = 6;
+              wifi_second_chan_t secondChan = WIFI_SECOND_CHAN_NONE;
+              esp_wifi_set_channel(primaryChan, secondChan);
+              Serial.println(WiFi.channel());
               esp_now_register_send_cb(OnDataSent);
               esp_now_peer_info_t peerInfo;
               memcpy(peerInfo.peer_addr, broadcastAddress, 6);
               peerInfo.channel = 6;
               peerInfo.encrypt = false;
 
-
-              // 檢查裝置是否配對成功
+// 檢查裝置是否配對成功
               if (esp_now_add_peer(&peerInfo) != ESP_OK) {
                 Serial.println("Failed to add peer");
                 return;
@@ -210,16 +229,56 @@ void loop(){
               else {
                 Serial.println("Error sending the data");
               }
-              
-              delay(4000);
+//
+              delay(stop_sec_1+ele_door_ocs);
+              // 進電梯
+              Serial.println("3");    
               m_front();
-              delay(3000);
+              delay(enter_ele_door);
+              // 在電梯內停下
+              Serial.println("4");    
               m_stop();
-              delay(1500);
-              m_back();
-              delay(4350);
+
+              WiFi.mode(WIFI_OFF);
+              WiFi.mode(WIFI_STA);
+              if (esp_now_init() != ESP_OK) {
+                Serial.println("Error initializing ESP-NOW");
+                return;
+              }
+              
               WiFi.reconnect();
             }
+
+            Serial.println("auto test mode");
+            Serial.println("");
+            client.println("<!DOCTYPE html><html>");
+            client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+            client.println("<link rel=\"icon\" href=\"data:,\">");
+
+            client.println("<style>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap');");
+            client.println("html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
+            client.println(".button_b {background-color: #77c7fc; border: none;border-radius: 10px;cursor: pointer; color: white; padding: 16px 40px;");
+            client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
+            client.println("</style></head>");
+            client.println("");
+            
+            client.println("<body><h1>delivery system</h1>");
+            
+            client.println("<p> " + String(ms) + " (ms)</p>");
+            client.println("<p> forward </p>");      
+            client.println("<p><a href=/f/1s><button class=\"button_b\">1 sec</button></a></p>"); 
+            client.println("<p><a href=/f/2s><button class=\"button_b\">2 sec</button></a></p>"); 
+            client.println("<p><a href=/f/3s><button class=\"button_b\">3 sec</button></a></p>"); 
+            client.println("<p><a href=/f/4s><button class=\"button_b\">4 sec</button></a></p>");
+            client.println("<p><a href=/f/5s><button class=\"button_b\">5 sec</button></a></p>");
+            client.println("<p><a href=/f/01><button class=\"button_b\">+0.5 sec</button></a></p>");
+            client.println("<p><a href=/f/02><button class=\"button_b\">-0.5 sec</button></a></p>");
+            client.println("<p><a href=/f/go><button class=\"button_b\">go forward</button></a></p>");
+
+            client.println("<p> auto test start</p>");      
+            client.println("<p><a href=/auto/start><button class=\"button_b\">auto start</button></a></p>"); 
+
+            client.println("</body></html>");
 
             client.println();
             // Break out of the while loop

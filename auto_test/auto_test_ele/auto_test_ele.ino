@@ -3,7 +3,7 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
 
-typedef struct struct_message {//接收資料的結構
+typedef struct struct_message { // 接收資料的結構
   int num;
 } struct_message;
 
@@ -48,6 +48,6 @@ void setup() {
 }
 
 void loop(){
-  esp_now_register_recv_cb(OnDataRecv);//設置資料接收回調函式
+  esp_now_register_recv_cb(OnDataRecv); //設置資料接收回調函式
 }
 
