@@ -53,13 +53,8 @@ void WiFiReset() {
   WiFi.mode(WIFI_OFF);
 }
 
-//兩個電池盒(的那一邊)在右
-//move1,2(HIGH,LOW,HIGH,LOW)前進
-//move_1(LOW,HIGH,LOW,HIGH)後退
-//move1(HIGH,LOW,HIGH,LOW)前方馬達
-//move2(HIGH,LOW,HIGH,LOW)後方馬達
-//move1(HIGH(左,27),LOW(左,27),HIGH(右,26),LOW)(右,26))前方馬達
-//move2(HIGH(左),LOW(左),HIGH(右),LOW)(右))後方馬達
+//兩個電池盒(的那一邊)在右為front
+
 void move_1(int a,int b, int c, int d){
   digitalWrite(M1,a);
   digitalWrite(M2,b);
@@ -201,7 +196,7 @@ void loop(){
               m_stop();
               WiFi.disconnect();        
 
-// 發送資料給電梯按鈕裝置
+              // 發送資料給電梯按鈕裝置
               uint8_t primaryChan = 6;
               wifi_second_chan_t secondChan = WIFI_SECOND_CHAN_NONE;
               esp_wifi_set_channel(primaryChan, secondChan);
@@ -229,7 +224,7 @@ void loop(){
               else {
                 Serial.println("Error sending the data");
               }
-//
+
               delay(stop_sec_1+ele_door_ocs);
               // 進電梯
               Serial.println("3");    
