@@ -5,6 +5,16 @@
 
 ---
 
+### 自走車車體：
+![自走車車體](https://github.com/pomelo-is-me/Automated_Delivery_System/assets/166627701/e4b78c03-da60-43e7-b7cc-e16598e24da9)
+
+
+### 電梯按鈕裝置：
+![電梯按鈕裝置](https://github.com/pomelo-is-me/Automated_Delivery_System/assets/166627701/82e34bab-416a-4a76-a79b-1ba017458c01)
+
+
+---
+
 ### auto_test：
 這裡放置自動測試的程式碼，分別為：(以下程式碼皆分別上傳至ESP32)
 #### 1. auto_test_car：
